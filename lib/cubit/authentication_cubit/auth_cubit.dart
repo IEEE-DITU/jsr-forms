@@ -34,8 +34,8 @@ class AuthCubit extends Cubit<AuthState> {
     } return result;
   }
 
-  Future<RequestStatus<UserProfile?>> signup({required String email, required String password}) async {
-    final result = await authRepo.signUp(email: email, password: password);
+  Future<RequestStatus<UserProfile?>> signup({required String email, required String password, required String name}) async {
+    final result = await authRepo.signUp(email: email, password: password, name: name);
     if (result.status == RequestStatus.SUCCESS) {
       emit(state.copyWith(status: AuthStatus.authenticated, user: result.body));
     } return result;

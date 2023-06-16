@@ -1,17 +1,19 @@
 import 'dart:developer';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:cloud_repository/cloud_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationRepository {
   AuthenticationRepository(
-      {FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignIn})
+      {FirebaseAuth? firebaseAuth, required this.cloudRepository})
       : //_googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
         _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   static SharedPreferences? pref;
   final FirebaseAuth _firebaseAuth;
+  final CloudRepository cloudRepository;
   // final GoogleSignIn _googleSignIn;
 
   Future<bool> isSignedIn() async {
@@ -28,11 +30,12 @@ class AuthenticationRepository {
   }
 
   Future<RequestStatus<UserProfile?>> signUp(
-      {required String email, required String password}) async {
+      {required String email, required String password, required String name}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       final currentUser = await user.first;
+      await cloudRepository.addNewUser(email: email, name: name, uid: currentUser.id);
       return RequestStatus(
           status: RequestStatus.SUCCESS, message: null, body: currentUser);
     } on FirebaseAuthException catch (e) {

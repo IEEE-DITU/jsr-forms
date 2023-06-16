@@ -44,13 +44,16 @@ class SignupCubit extends Cubit<SignupState> {
     await Future.delayed(const Duration(seconds: 3));
     try {
       final res = await auth.signup(
-          email: state.email.value, password: state.password.value);
-      if(res.status == RequestStatus.SUCCESS) {
+          email: state.email.value,
+          password: state.password.value,
+          name: state.username);
+      if (res.status == RequestStatus.SUCCESS) {
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } else {
-        emit(state.copyWith(status: FormzSubmissionStatus.failure, msg: res.message));
+        emit(state.copyWith(
+            status: FormzSubmissionStatus.failure, msg: res.message));
       }
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       log(e.toString());
     }
   }

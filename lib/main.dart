@@ -1,3 +1,4 @@
+import 'package:cloud_repository/cloud_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:authentication_repository/authentication_repository.dart';
@@ -15,18 +16,23 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final authenticationRepository = AuthenticationRepository();
+  final cloudRepository = CloudRepository();
+  final authenticationRepository =
+      AuthenticationRepository(cloudRepository: cloudRepository);
   await authenticationRepository.user.first;
 
   runApp(MyApp(
     authRepo: authenticationRepository,
+    cloudRepo: cloudRepository,
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, required this.authRepo}) : super(key: key);
+  const MyApp({Key? key, required this.authRepo, required this.cloudRepo})
+      : super(key: key);
 
   final AuthenticationRepository authRepo;
+  final CloudRepository cloudRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class MyApp extends StatelessWidget {
           home: BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               if (state.status == AuthStatus.authenticated) {
-                if(!state.user.isEmailVerified) {
+                if (!state.user.isEmailVerified) {
                   return const HomeScreen();
                 }
                 return const HomeScreen();
@@ -54,34 +60,20 @@ class MyApp extends StatelessWidget {
               inputDecorationTheme: InputDecorationTheme(
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 1.5
-                      )
-                  ),
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 1.5)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 1.5
-                      )
-                  ),
+                      borderSide:
+                          const BorderSide(color: Colors.white, width: 1.5)),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 1.5
-                      )
-                  ),
+                      borderSide:
+                          const BorderSide(color: Colors.red, width: 1.5)),
                   focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
-                      borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 1.5
-                      )
-                  )
-              )
-          ),
+                      borderSide:
+                          const BorderSide(color: Colors.red, width: 1.5)))),
         ),
       ),
     );
