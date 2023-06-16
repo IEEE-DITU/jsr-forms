@@ -23,6 +23,10 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(email: email));
   }
 
+  void onUsernameChanged(String value) {
+    emit(state.copyWith(username: value.trim()));
+  }
+
   void onPasswordChanged(String value) {
     var password =
         value.isNotEmpty ? Password.dirty(value) : const Password.pure();

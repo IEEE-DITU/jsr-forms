@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jsr_forms/screens/email_verify_screen.dart';
 import 'package:jsr_forms/screens/home_screen.dart';
 import 'package:jsr_forms/screens/login_screen.dart';
 import 'package:jsr_forms/screens/splash_screen.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
           home: BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               if (state.status == AuthStatus.authenticated) {
+                if(!state.user.isEmailVerified) {
+                  return const HomeScreen();
+                }
                 return const HomeScreen();
               } else if (state.status == AuthStatus.unauthenticated) {
                 return const LoginScreen();

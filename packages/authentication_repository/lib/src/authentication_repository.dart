@@ -22,7 +22,7 @@ class AuthenticationRepository {
   Stream<UserProfile> get user {
     return _firebaseAuth.authStateChanges().map((fireBaseUser) {
       final user =
-          fireBaseUser == null ? UserProfile.empty : fireBaseUser.toUser;
+          fireBaseUser == null ? UserProfile.empty : UserProfile.fromUser(fireBaseUser);
       return user;
     });
   }
@@ -128,9 +128,3 @@ class AuthenticationRepository {
   }
 }
 
-extension on User {
-  UserProfile get toUser {
-    return UserProfile(
-        id: uid, email: email, name: displayName, profileUrl: photoURL);
-  }
-}

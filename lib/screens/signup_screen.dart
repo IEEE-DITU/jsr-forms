@@ -15,7 +15,7 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: BlocProvider(
         create: (context) =>
             SignupCubit(context.read<AuthCubit>()),
@@ -65,96 +65,116 @@ class SignupScreen extends StatelessWidget {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter)),
                   )),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'SIGN UP',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold),
-                  ).paddingForOnly(top: 180).wrapCenter(),
-                  const Text(
-                    'Email',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  )
-                      .paddingWithSymmetry(horizontal: 20, vertical: 4)
-                      .paddingForOnly(top: 20),
-                  InputTextField<SignupCubit, SignupState>(
-                    buildWhen: (p, c) => p.email != c.email,
-                    onValueChanged: (value, cubit) =>
-                        cubit.onEmailChanged(value),
-                    getErrorMsg: (state) =>
-                        state.email.isPure || state.email.isValid
-                            ? null
-                            : 'Invalid Email',
-                  ).paddingForOnly(bottom: 20),
-                  const Text(
-                    'Password',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ).paddingWithSymmetry(horizontal: 20, vertical: 4),
-                  InputTextField<SignupCubit, SignupState>(
-                    obscureText: true,
-                    buildWhen: (p, c) => p.password != c.password,
-                    onValueChanged: (value, cubit) =>
-                        cubit.onPasswordChanged(value),
-                    getErrorMsg: (state) =>
-                        state.password.isPure || state.password.isValid
-                            ? null
-                            : 'Invalid Password',
-                  ).paddingForOnly(bottom: 0),
-                  const Text(
-                    'Confirm Password',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ).paddingWithSymmetry(horizontal: 20, vertical: 4),
-                  InputTextField<SignupCubit, SignupState>(
-                    obscureText: true,
-                    buildWhen: (p, c) => p.confirmPassword != c.confirmPassword,
-                    onValueChanged: (value, cubit) =>
-                        cubit.onConfirmPasswordChanged(value),
-                    getErrorMsg: (state) =>
-                        state.password.value == state.confirmPassword.value
-                            ? null
-                            : 'Passwords do not match',
-                  ).paddingForOnly(bottom: 0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomButton(
-                        title: 'LOGIN',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()),
-                          );
-                        },
-                      ),
-                      CustomCubitButton<SignupCubit, SignupState>(
-                              onTap: (state, cubit) => cubit.onButtonPressed(),
-                              isEnabled: (state) =>
-                                  state.email.isValid &&
-                                  state.password.isValid &&
-                                  (state.password.value ==
-                                      state.confirmPassword.value),
-                              isLoading: (state) =>
-                                  state.status ==
-                                  FormzSubmissionStatus.inProgress,
-                              title: 'SIGN UP')
-                          .wrapCenter(),
-                    ],
-                  ).paddingWithSymmetry(horizontal: 20, vertical: 20)
-                ],
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'SIGN UP',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold),
+                    ).paddingForOnly(top: 180).wrapCenter(),
+                    const Text(
+                      'Email',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    )
+                        .paddingWithSymmetry(horizontal: 20, vertical: 4)
+                        .paddingForOnly(top: 20),
+                    InputTextField<SignupCubit, SignupState>(
+                      buildWhen: (p, c) => p.email != c.email,
+                      onValueChanged: (value, cubit) =>
+                          cubit.onEmailChanged(value),
+                      getErrorMsg: (state) =>
+                          state.email.isPure || state.email.isValid
+                              ? null
+                              : 'Invalid Email',
+                    ).paddingForOnly(bottom: 0),
+                    const Text(
+                      'Username',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    )
+                        .paddingWithSymmetry(horizontal: 20, vertical: 4),
+                    InputTextField<SignupCubit, SignupState>(
+                      buildWhen: (p, c) => p.username != c.username,
+                      onValueChanged: (value, cubit) =>
+                          cubit.onUsernameChanged(value),
+                      getErrorMsg: (state) =>
+                      state.username.length >= 4 || state.username.isEmpty
+                          ? null
+                          : 'Invalid Username',
+                    ).paddingForOnly(bottom: 0),
+                    const Text(
+                      'Password',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ).paddingWithSymmetry(horizontal: 20, vertical: 4),
+                    InputTextField<SignupCubit, SignupState>(
+                      obscureText: true,
+                      buildWhen: (p, c) => p.password != c.password,
+                      onValueChanged: (value, cubit) =>
+                          cubit.onPasswordChanged(value),
+                      getErrorMsg: (state) =>
+                          state.password.isPure || state.password.isValid
+                              ? null
+                              : 'Invalid Password',
+                    ).paddingForOnly(bottom: 0),
+                    const Text(
+                      'Confirm Password',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ).paddingWithSymmetry(horizontal: 20, vertical: 4),
+                    InputTextField<SignupCubit, SignupState>(
+                      obscureText: true,
+                      buildWhen: (p, c) => p.confirmPassword != c.confirmPassword,
+                      onValueChanged: (value, cubit) =>
+                          cubit.onConfirmPasswordChanged(value),
+                      getErrorMsg: (state) =>
+                          state.password.value == state.confirmPassword.value
+                              ? null
+                              : 'Passwords do not match',
+                    ).paddingForOnly(bottom: 0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomButton(
+                          title: 'LOGIN',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()),
+                            );
+                          },
+                        ),
+                        CustomCubitButton<SignupCubit, SignupState>(
+                                onTap: (state, cubit) => cubit.onButtonPressed(),
+                                isEnabled: (state) =>
+                                    state.email.isValid &&
+                                    state.password.isValid &&
+                                    state.password.value ==
+                                        state.confirmPassword.value &&
+                                    state.username.length >= 4,
+                                isLoading: (state) =>
+                                    state.status ==
+                                    FormzSubmissionStatus.inProgress,
+                                title: 'SIGN UP')
+                            .wrapCenter(),
+                      ],
+                    ).paddingWithSymmetry(horizontal: 20, vertical: 20)
+                  ],
+                ),
               )
             ],
           ),
